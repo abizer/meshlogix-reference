@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Apartment Twitter</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class StatusForm extends React.Component {
+            submitStatus = (e) => {
+                // this will send a POST request to the backend with the form data
+            }
+
+            render() {
+                return (
+                    <form onSubmit={this.submitStatus}>
+                        <input type="text" id="name" placeholder="Your Name" required />
+                        <input type="number" id="apartment" placeholder="Apartment Number" required />
+                        <textarea id="status" placeholder="Status Update" required />
+                        <button type="submit">Post</button>
+                    </form>
+                );
+            }
+        }
+
+        class StatusItem extends React.Component {
+            render() {
+                return (
+                    <li>
+                        <span>{this.props.timestamp} </span>
+                        <span onClick={() => this.props.filterStatusByAuthor(this.props.author)}>{this.props.author} </span>
+                        <span onClick={() => this.props.filterStatusByApartment(this.props.apartment)}>{this.props.apartment}</span>
+                        <p>{this.props.post}</p>
+                    </li>
+                );
+            }
+        }
+
+        class StatusList extends React.Component {
+            filterStatusByAuthor = (author) => {
+                // this will filter status updates by author
+            }
+
+            filterStatusByApartment = (apartment) => {
+                // this will filter status updates by apartment
+            }
+
+            getStatusUpdates = () => {
+                // this will get all status updates
+            }
+
+            render() {
+                return (
+                    <ul>
+                        {this.props.statusUpdates.map((status, i) =>
+                            <StatusItem key={i} {...status} filterStatusByAuthor={this.filterStatusByAuthor} filterStatusByApartment={this.filterStatusByApartment} />
+                        )}
+                    </ul>
+                );
+            }
+        }
+
+        class App extends React.Component {
+            state = {
+                statusUpdates: []
+            }
+
+            componentDidMount() {
+                // Fetch status updates when the component is mounted
+                this.getStatusUpdates();
+            }
+
+            getStatusUpdates = () => {
+                // this will get all status updates
+            }
+
+            render() {
+                return (
+                    <div>
+                        <StatusForm getStatusUpdates={this.getStatusUpdates} />
+                        <StatusList statusUpdates={this.state.statusUpdates} />
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+
+    </script>
+</body>
+
+</html>
