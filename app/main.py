@@ -1,4 +1,4 @@
-import fastapi 
+from fastapi import FastAPI
 import sqlite3
 from pydantic import BaseModel
 import uvicorn
@@ -6,7 +6,7 @@ import uvicorn
 app = FastAPI()
 
 # Create a connection to SQLite database
-conn = sqlite3.connect("status_updates.db")
+conn = sqlite3.connect("status_updates.db", check_same_thread=False)
 cursor = conn.cursor()
 
 # Data model
@@ -38,6 +38,13 @@ def get_status():
 
 @app.post("/status")
 def post_status(status: StatusUpdate):
+    # validation
+    cursor.execute("SELECT author, apartment FROM status_updates GROUP BY author, apartment")
+    authors = {author:apt for author, apt in cursor.fetchall()}
+    if status.author in authors:
+        if status.apartment != authors[status.author]:
+            return {"error": "Integrity constraint violated: authors can only live in one apartment"}
+
     cursor.execute("INSERT INTO status_updates VALUES (?,?,?,?)", (status.timestamp, status.author, status.apartment, status.post))
     conn.commit()
     return {"message": "Status update has been posted successfully"}
