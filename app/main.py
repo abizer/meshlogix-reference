@@ -1,3 +1,8 @@
+import fastapi 
+import sqlite3
+from pydantic import BaseModel
+import uvicorn
+
 app = FastAPI()
 
 # Create a connection to SQLite database
